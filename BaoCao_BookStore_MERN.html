@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Báo cáo Bài Kiểm Tra MERN Stack — Quản Lý Sách (Warhammer Edition)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+    :root {
+      --primary: #8b0000;
+      --primary-dark: #5c0000;
+      --gold: #c99700;
+      --gold-dark: #8b6914;
+      --bg-dark: #0f0f12;
+      --text-main: #222222;
+      --text-muted: #555555;
+      --code-bg: #1e1e24;
+      --border-color: #d8d8d8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text-main);
+      background: #f4f5f7;
+      line-height: 1.6;
+      padding: 24px;
+    }
+
+    .toolbar {
+      max-width: 960px;
+      margin: 0 auto 20px auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #111;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      border-left: 5px solid var(--gold);
+    }
+
+    .toolbar button {
+      background: linear-gradient(135deg, #c99700, #8b6914);
+      color: #000;
+      font-weight: 700;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .toolbar button:hover {
+      filter: brightness(1.15);
+      transform: translateY(-1px);
+    }
+
+    .report-container {
+      max-width: 960px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 48px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      border-radius: 10px;
+    }
+
+    /* COVER / HEADER */
+    .header-banner {
+      text-align: center;
+      border-bottom: 3px double var(--gold);
+      padding-bottom: 24px;
+      margin-bottom: 32px;
+      background: linear-gradient(180deg, rgba(139,0,0,0.04) 0%, transparent 100%);
+    }
+
+    .school-title {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .exam-title {
+      font-family: 'Cinzel', serif;
+      font-size: 28px;
+      color: #111;
+      font-weight: 900;
+      margin-bottom: 6px;
+      letter-spacing: 1px;
+    }
+
+    .exam-subtitle {
+      font-size: 16px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .student-card {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      background: #fdfbf7;
+      border: 1px solid #ebdcb9;
+      border-left: 4px solid var(--gold);
+      padding: 16px 20px;
+      border-radius: 6px;
+      margin-bottom: 32px;
+      font-size: 14px;
+    }
+
+    .student-card strong {
+      color: #333;
+    }
+
+    /* SECTION STYLING */
+    h2.section-header {
+      font-size: 19px;
+      color: #fff;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+      padding: 10px 16px;
+      border-radius: 4px;
+      margin-top: 36px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-left: 5px solid var(--gold);
+    }
+
+    h3.sub-header {
+      font-size: 15px;
+      color: var(--primary);
+      margin: 18px 0 10px 0;
+      padding-bottom: 4px;
+      border-bottom: 1px dashed var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    p, li {
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    ul, ol {
+      padding-left: 22px;
+      margin-bottom: 12px;
+    }
+
+    /* CODE BLOCKS */
+    .code-box {
+      background: var(--code-bg);
+      color: #f0f0f0;
+      padding: 14px 18px;
+      border-radius: 6px;
+      font-family: 'Fira Code', Consolas, monospace;
+      font-size: 12.5px;
+      overflow-x: auto;
+      margin: 10px 0 16px 0;
+      border: 1px solid #2f2f38;
+      line-height: 1.5;
+    }
+
+    .code-tag {
+      display: inline-block;
+      font-size: 11px;
+      background: #333;
+      color: var(--gold);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    /* TABLES */
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0 20px 0;
+      font-size: 13.5px;
+    }
+
+    table.data-table th, table.data-table td {
+      border: 1px solid #e0e0e0;
+      padding: 10px 14px;
+      text-align: left;
+    }
+
+    table.data-table th {
+      background: #f7f3ed;
+      color: #222;
+      font-weight: 700;
+    }
+
+    table.data-table tr:nth-child(even) {
+      background: #fafafa;
+    }
+
+    .badge-pass {
+      display: inline-block;
+      padding: 3px 8px;
+      background: #e6f7ec;
+      color: #0d8a3e;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    /* SCREENSHOT PLACEHOLDER */
+    .screenshot-zone {
+      border: 2px dashed #c4b595;
+      background: #fbf9f4;
+      border-radius: 8px;
+      padding: 24px;
+      text-align: center;
+      margin: 14px 0 22px 0;
+      position: relative;
+    }
+
+    .screenshot-zone img {
+      max-width: 100%;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      margin-top: 10px;
+    }
+
+    .screenshot-title {
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .screenshot-hint {
+      font-size: 12px;
+      color: #777;
+    }
+
+    /* LINK BOX */
+    .link-box {
+      background: #fdfbf5;
+      border: 2px solid var(--gold);
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+
+    .link-box a {
+      color: var(--primary);
+      font-weight: 700;
+      text-decoration: underline;
+      word-break: break-all;
+    }
+
+    /* PRINT RULES */
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+      }
+      .toolbar {
+        display: none;
+      }
+      .report-container {
+        box-shadow: none;
+        padding: 20px;
+        max-width: 100%;
+      }
+      .page-break {
+        page-break-before: always;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toolbar">
+    <div><strong>📄 BÁO CÁO MERN STACK MINI PROJECT</strong> — Chuẩn xuất PDF</div>
+    <button onclick="window.print()">🖨️ IN BÁO CÁO / LƯU PDF (Ctrl + P)</button>
+  </div>
+
+  <div class="report-container">
+    <!-- HEADER -->
+    <header class="header-banner">
+      <div class="school-title">BÀI KIỂM TRA THỰC HÀNH PHÁT TRIỂN ỨNG DỤNG WEB</div>
+      <h1 class="exam-title">ỨNG DỤNG QUẢN LÝ SÁCH (BOOK STORE)</h1>
+      <p class="exam-subtitle">Kiến trúc MERN Stack: MongoDB • ExpressJS • ReactJS • NodeJS</p>
+      <p style="font-size: 13px; color: var(--gold-dark); font-weight: 600; margin-top: 4px;">
+        ⚔️ Phiên bản giao diện: Warhammer 40,000 Imperial Librarium Theme ⚔️
+      </p>
+    </header>
+
+    <!-- THÔNG TIN SINH VIÊN -->
+    <div class="student-card">
+      <div><strong>Họ và tên:</strong> [Họ và tên sinh viên]</div>
+      <div><strong>Mã số sinh viên (MSSV):</strong> [MSSV]</div>
+      <div><strong>Lớp / Môn học:</strong> Phát triển Ứng dụng Web / MERN Stack</div>
+      <div><strong>Thời gian thực hiện:</strong> 120 phút</div>
+    </div>
+
+    <!-- MỤC 1: MÔ TẢ HỆ THỐNG -->
+    <h2 class="section-header">1. MÔ TẢ HỆ THỐNG & CẤU TRÚC DỰ ÁN</h2>
+
+    <h3 class="sub-header">1.1. Cấu trúc thư mục dự án</h3>
+    <p>Dự án được cấu trúc rõ ràng theo mô hình Client - Server tách biệt:</p>
+    <div class="code-box">
+10_8/
+├── server.js               # Điểm khởi chạy Express server & kết nối MongoDB
+├── package.json            # Dependencies backend (express, mongoose, cors, dotenv)
+├── .env                    # Biến môi trường (PORT=5000, MONGODB_URI)
+├── seed.js                 # Script nạp dữ liệu mẫu ban đầu vào MongoDB
+├── demoTest.js             # Test runner tự động kiểm tra toàn diện API
+├── models/
+│   └── Book.js             # Mongoose Schema & Model cho Book
+├── routes/
+│   └── bookRoutes.js       # Express Router định nghĩa GET & POST /api/books
+└── client/                 # Ứng dụng ReactJS Frontend
+    ├── package.json        # Dependencies React
+    ├── public/
+    │   └── index.html      # HTML root, Google Fonts (Cinzel, MedievalSharp)
+    └── src/
+        ├── index.js        # React DOM render root
+        ├── App.js          # Component chính: State, fetch API, form thêm, danh sách
+        └── App.css         # Bộ stylesheet Warhammer 40K Imperial Gothic
+    </div>
+
+    <h3 class="sub-header">1.2. Hướng dẫn chạy dự án</h3>
+    <ol>
+      <li><strong>Cài đặt backend & khởi chạy server:</strong>
+        <div class="code-box">
+npm install
+node seed.js    # Nạp 3 cuốn sách mẫu vào MongoDB
+node server.js  # Server lắng nghe tại http://localhost:5000
+        </div>
+      </li>
+      <li><strong>Cài đặt frontend & chạy React client:</strong>
+        <div class="code-box">
+cd client
+npm install
+npm start       # Trình duyệt mở tại http://localhost:3000
+        </div>
+      </li>
+    </ol>
+
+    <!-- MỤC 2: CÂU 1 - MONGODB -->
+    <h2 class="section-header">2. CÂU 1: CƠ SỞ DỮ LIỆU MONGODB & MODEL</h2>
+    <p>Database sử dụng: <code>BookStoreDB</code>, collection: <code>books</code>.</p>
+    <span class="code-tag">models/Book.js</span>
+    <div class="code-box">
+const mongoose = require('mongoose');
+
+const bookSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: [true, 'Tên sách không được để trống'],
+    trim: true
+  },
+  author: {
+    type: String,
+    required: [true, 'Tác giả không được để trống'],
+    trim: true
+  },
+  price: {
+    type: Number,
+    required: [true, 'Giá tiền không được để trống'],
+    min: [0, 'Giá tiền không được là số âm']
+  },
+  isPublished: {
+    type: Boolean,
+    default: true
+  }
+}, {
+  timestamps: true // Tự động ghi nhận createdAt và updatedAt
+});
+
+module.exports = mongoose.model('Book', bookSchema);
+    </div>
+    <p><strong>Giải thích Model:</strong> Schema định nghĩa đầy đủ 4 trường theo đúng yêu cầu đề bài: <code>title</code>, <code>author</code>, <code>price</code> đều bắt buộc (<code>required: true</code>) và <code>isPublished</code> mặc định là <code>true</code>. Đã seed thành công 3 cuốn sách mẫu.</p>
+
+    <div class="page-break"></div>
+
+    <!-- MỤC 3: CÂU 2 - BACKEND API -->
+    <h2 class="section-header">3. CÂU 2: XÂY DỰNG RESTFUL API (EXPRESSJS)</h2>
+    <p>Triển khai 2 API endpoints chính tại <code>/api/books</code>:</p>
+
+    <span class="code-tag">routes/bookRoutes.js</span>
+    <div class="code-box">
+const express = require('express');
+const router = express.Router();
+const Book = require('../models/Book');
+
+// 1. GET /api/books — Lấy danh sách toàn bộ sách (sắp xếp mới nhất lên đầu)
+router.get('/', async (req, res) => {
+  try {
+    const books = await Book.find().sort({ createdAt: -1 });
+    res.status(200).json(books);
+  } catch (error) {
+    res.status(500).json({ message: 'Lỗi server khi lấy danh sách sách', error: error.message });
+  }
+});
+
+// 2. POST /api/books — Thêm sách mới với validation dữ liệu
+router.post('/', async (req, res) => {
+  try {
+    const { title, author, price, isPublished } = req.body;
+
+    // Validation kiểm tra tính đầy đủ của trường bắt buộc
+    if (!title || !author || price === undefined || price === null || price === '') {
+      return res.status(400).json({ message: 'Vui lòng cung cấp đầy đủ title, author và price' });
+    }
+
+    const newBook = new Book({
+      title: title.trim(),
+      author: author.trim(),
+      price: Number(price),
+      isPublished: isPublished !== undefined ? isPublished : true
+    });
+
+    const savedBook = await newBook.save();
+    res.status(201).json(savedBook); // Trả về status 201 Created
+  } catch (error) {
+    res.status(400).json({ message: 'Lỗi khi tạo sách', error: error.message });
+  }
+});
+
+module.exports = router;
+    </div>
+
+    <p><strong>Giải thích Logic API:</strong></p>
+    <ul>
+      <li><strong>GET /api/books:</strong> Sử dụng <code>Book.find().sort({ createdAt: -1 })</code> để truy xuất toàn bộ documents từ MongoDB, sắp xếp theo thời gian mới nhất và phản hồi với mã trạng thái <code>200 OK</code>.</li>
+      <li><strong>POST /api/books:</strong> Đọc dữ liệu từ <code>req.body</code>, kiểm tra dữ liệu bắt buộc (trả về <code>400 Bad Request</code> nếu thiếu hoặc sai định dạng), sau đó dùng <code>new Book().save()</code> lưu vào CSDL và trả về document vừa tạo với mã <code>201 Created</code>.</li>
+    </ul>
+
+    <!-- MỤC 4: CÂU 3 - FRONTEND REACT -->
+    <h2 class="section-header">4. CÂU 3: GIAO DIỆN VÀ TÍCH HỢP REACTJS</h2>
+    <p>Giao diện được thiết kế mang phong cách <strong>Warhammer 40K Imperial Librarium</strong> độc đáo với tông màu vàng đồng (Imperial Gold), đỏ thẫm (Blood Red), nền huyền bí (Void Black) cùng typography gothic (Cinzel):</p>
+
+    <span class="code-tag">client/src/App.js (Trích đoạn xử lý State & Gọi API)</span>
+    <div class="code-box">
+// 1. useEffect — Fetch dữ liệu khi load component
+useEffect(() => {
+  const fetchBooks = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/books');
+      const data = await response.json();
+      setBooks(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchBooks();
+}, []);
+
+// 2. handleSubmit — Gọi API POST khi thêm sách mới
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!title.trim() || !author.trim() || !price) return;
+
+  try {
+    setSubmitting(true);
+    const response = await fetch('/api/books', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: title.trim(), author: author.trim(), price: Number(price) })
+    });
+    const newBook = await response.json();
+
+    // Cập nhật state books: thêm sách mới lên đầu danh sách mà không cần reload
+    setBooks(prev => [newBook, ...prev]);
+    setTitle(''); setAuthor(''); setPrice('');
+    setSuccess(`Đã thêm sách "${newBook.title}" thành công!`);
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setSubmitting(false);
+  }
+};
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- MỤC 5: KẾT QUẢ TEST API -->
+    <h2 class="section-header">5. KẾT QUẢ KIỂM THỬ API (DEMO TEST)</h2>
+    <p>Kiểm thử tự động toàn bộ 5 kịch bản API đều đạt kết quả xuất sắc (100% Passed):</p>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Kịch bản</th>
+          <th>Phương thức & URL</th>
+          <th>Mục đích kiểm thử</th>
+          <th>HTTP Status</th>
+          <th>Kết quả</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Test 1</strong></td>
+          <td><code>GET /api/books</code></td>
+          <td>Lấy danh sách ban đầu từ database</td>
+          <td>200 OK</td>
+          <td><span class="badge-pass">✅ PASS (4 items)</span></td>
+        </tr>
+        <tr>
+          <td><strong>Test 2</strong></td>
+          <td><code>POST /api/books</code></td>
+          <td>Thêm cuốn "Lược Sử Thời Gian"</td>
+          <td>201 Created</td>
+          <td><span class="badge-pass">✅ PASS</span></td>
+        </tr>
+        <tr>
+          <td><strong>Test 3</strong></td>
+          <td><code>POST /api/books</code></td>
+          <td>Thêm cuốn "Sapiens: Lược Sử Loài Người"</td>
+          <td>201 Created</td>
+          <td><span class="badge-pass">✅ PASS</span></td>
+        </tr>
+        <tr>
+          <td><strong>Test 4</strong></td>
+          <td><code>POST /api/books</code></td>
+          <td>Validation khi thiếu trường bắt buộc (title rỗng)</td>
+          <td>400 Bad Request</td>
+          <td><span class="badge-pass">✅ PASS</span></td>
+        </tr>
+        <tr>
+          <td><strong>Test 5</strong></td>
+          <td><code>GET /api/books</code></td>
+          <td>Kiểm tra danh sách sách sau khi thêm mới</td>
+          <td>200 OK</td>
+          <td><span class="badge-pass">✅ PASS (6 items)</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- MỤC 6: HÌNH ẢNH CHỨNG MINH -->
+    <h2 class="section-header">6. HÌNH ẢNH CHỨNG MINH HỆ THỐNG ĐÃ HOẠT ĐỘNG</h2>
+
+    <div class="screenshot-zone">
+      <div class="screenshot-title">📸 Hình 1: Giao diện ReactJS Warhammer Edition trên Trình Duyệt (http://localhost:3000)</div>
+      <div class="screenshot-hint">Chụp màn hình trang chủ với Form thêm sách và Bảng danh mục cổ thư Imperialis</div>
+      <p style="margin-top: 10px; font-style: italic; color: #888;">[Dán ảnh chụp màn hình trình duyệt tại đây trước khi nộp]</p>
+    </div>
+
+    <div class="screenshot-zone">
+      <div class="screenshot-title">📸 Hình 2: Kết quả Test API trên Terminal / Postman</div>
+      <div class="screenshot-hint">Chụp màn hình chạy lệnh <code>node demoTest.js</code> hiển thị 5/5 bài kiểm tra Passed</div>
+      <p style="margin-top: 10px; font-style: italic; color: #888;">[Dán ảnh chụp terminal test API tại đây trước khi nộp]</p>
+    </div>
+
+    <div class="screenshot-zone">
+      <div class="screenshot-title">📸 Hình 3: Cơ sở dữ liệu MongoDB Compass / Terminal</div>
+      <div class="screenshot-hint">Chụp màn hình database BookStoreDB, collection books chứa dữ liệu đã tạo</div>
+      <p style="margin-top: 10px; font-style: italic; color: #888;">[Dán ảnh chụp MongoDB Compass tại đây trước khi nộp]</p>
+    </div>
+
+    <!-- MỤC 7: LINK SOURCE CODE -->
+    <h2 class="section-header">7. LIÊN KẾT NGUỒN (SOURCE CODE)</h2>
+    <div class="link-box">
+      <p><strong>🔗 Link Google Drive / GitHub chứa toàn bộ source code dự án:</strong></p>
+      <p style="margin-top: 6px;">
+        <a href="https://github.com/48HJP/ktx2" target="_blank">https://github.com/48HJP/ktx2</a>
+      </p>
+      <p style="font-size: 12px; color: #666; margin-top: 8px;">
+        <em>* Lưu ý theo yêu cầu đề bài: Thư mục nén bao gồm đầy đủ thư mục gốc và <code>client/</code>, đã loại trừ thư mục <code>node_modules</code>. Link đã mở quyền truy cập Anyone with the link can view.</em>
+      </p>
+    </div>
+
+  </div>
+
+</body>
+</html>
